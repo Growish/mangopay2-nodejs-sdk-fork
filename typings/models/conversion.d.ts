@@ -10,6 +10,7 @@ export namespace conversion {
     import MoneyData = money.MoneyData;
     import MoneyDataOptionalAmount = money.MoneyDataOptionalAmount;
     import ConversionRateData = conversionRate.ConversionRateData;
+    import CustomMoneyData = money.CustomMoneyData;
 
     type QuoteStatus = "ACTIVE" | "EXPIRED";
 
@@ -50,6 +51,8 @@ export namespace conversion {
          */
         Fees: MoneyData;
 
+        RequestedFees?: CustomMoneyData;
+
         /**
          * Real time indicative market rate of a specific currency pair
          */
@@ -88,6 +91,8 @@ export namespace conversion {
          * The statuses CREATED and FAILED return an ExecutionDate of null
          */
         ExecutionDate: number;
+
+        MarginsResponse: MarginsResponse;
     }
 
     interface CreateInstantConversion {
@@ -114,18 +119,20 @@ export namespace conversion {
         /**
          * The buy funds
          */
-        CreditedFunds: MoneyData;
+        CreditedFunds: MoneyDataOptionalAmount;
 
         /**
          * Information about the fees taken by the platform for this transaction (and hence transferred to the Fees Wallet).
          * Note: The fees currency must match the debited funds currency.
          */
-        Fees?: MoneyData;
+        Fees?: CustomMoneyData;
 
         /**
          * Custom data that you can add to this object.
          */
         Tag?: string;
+
+        UserMargin?: UserMargin;
     }
 
     interface CreateQuotedConversion {
@@ -214,12 +221,38 @@ export namespace conversion {
         DebitedFunds: MoneyData;
         CreditedFunds: MoneyData;
         ConversionRateResponse: ConversionRateData;
+        Fees?: MoneyData;
+        RequestedFees?: CustomMoneyData;
+        MarginsResponse: MarginsResponse;
     }
 
     interface CreateQuote {
-        DebitedFunds: MoneyData;
-        CreditedFunds: MoneyData;
+        DebitedFunds: MoneyDataOptionalAmount;
+        CreditedFunds: MoneyDataOptionalAmount;
         Duration: number;
         Tag?: string;
+        Fees?: CustomMoneyData;
+        UserMargin?: UserMargin;
+    }
+
+    interface UserMargin {
+        /**
+         * Defines the calculation model.
+         * <p>PERCENTAGE: The margin is a percentage of the transaction amount.</p>
+         * <p>PIP: The margin is defined in pips.</p>
+         */
+        Type: string;
+
+        /**
+         * The numerical value for the margin
+         */
+        Value: number;
+
+        Amount?: number;
+    }
+
+    interface MarginsResponse {
+        Mangopay: UserMargin;
+        User?: UserMargin;
     }
 }

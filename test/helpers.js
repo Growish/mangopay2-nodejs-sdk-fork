@@ -640,6 +640,62 @@ module.exports = {
         });
     },
 
+    getNewPayoutBankWireWithRecipientId: function(api, user, callback) {
+        var wallet = {
+            Owners: [user.Id],
+            Currency: 'EUR',
+            Description: 'WALLET IN EUR'
+        };
+
+        const createRecipient = {
+            DisplayName: "My EUR account",
+            PayoutMethodType: "LocalBankTransfer",
+            RecipientType: "Individual",
+            Currency: "EUR",
+            Country: "DE",
+            IndividualRecipient: {
+                FirstName: "John",
+                LastName: "Doe",
+                Address: {
+                    AddressLine1: "10 Kingsway",
+                    City: "London",
+                    PostalCode: "WC2B 6LH",
+                    Country: "DE"
+                }
+            },
+            LocalBankTransfer: {
+                EUR: {
+                    IBAN: "DE75512108001245126199"
+                }
+            },
+            ScaContext: "USER_PRESENT"
+        };
+
+        api.Wallets.create(wallet).then(function(data){
+            api.Recipients.create(createRecipient, user.Id).then(function(data){
+                var payOut = {
+                    DebitedWalletId: wallet.Id,
+                    AuthorId: user.Id,
+                    CreditedUserId: user.Id,
+                    Tag: 'DefaultTag',
+                    DebitedFunds: {
+                        Amount: 10,
+                        Currency: 'EUR'
+                    },
+                    Fees: {
+                        Amount: 5,
+                        Currency: 'EUR'
+                    },
+                    RecipientId: data.Id,
+                    BankWireRef: 'User payment',
+                    PaymentType: 'BANK_WIRE',
+                    PayoutModeRequested: 'STANDARD'
+                };
+                api.PayOuts.create(payOut, callback);
+            });
+        });
+    },
+
     getNewPayInCardWeb: function(api, user, callback) {
         var wallet = {
             Owners: [user.Id],
@@ -1048,7 +1104,7 @@ module.exports = {
                 AuthorId: user.Id,
                 CreditedWalletId: wallet.Id,
                 DebitedFunds: {
-                    Amount: 1000,
+                    Amount: 990,
                     Currency: 'EUR'
                 },
                 Fees: {
@@ -1069,7 +1125,8 @@ module.exports = {
                         Quantity: 1,
                         UnitAmount: 500,
                         TaxAmount: 0,
-                        Description: "seller2 ID"
+                        Description: "seller2 ID",
+                        Discount: 10
                     }
                 ],
                 Country: "FR",
@@ -1294,6 +1351,25 @@ module.exports = {
             CreditedFunds: {
                 Currency: 'GBP'
             },
+            Duration: 300,
+            Fees: {
+                Currency: 'EUR',
+                Type: 'FIXED',
+                Value: 1
+            }
+        };
+        api.Conversions.createQuote(quoteBody, callback);
+    },
+
+    getNewQuoteWithoutFees: function (api, callback) {
+        var quoteBody = {
+            DebitedFunds: {
+                Amount: 100,
+                Currency: 'EUR'
+            },
+            CreditedFunds: {
+                Currency: 'GBP'
+            },
             Duration: 300
         };
         api.Conversions.createQuote(quoteBody, callback);
@@ -1403,6 +1479,36 @@ module.exports = {
                 ]
             };
             api.PayIns.createPayInIntentAuthorization(payInIntent, callback);
+        });
+    },
+
+    getNewPayInIntentFullCapture: function (api, user, callback) {
+        this.getNewPayInIntentAuthorization(api, user, function (data) {
+            const toCreate = {
+                "ExternalData" : {
+                    "ExternalProcessingDate" : 1727788165,
+                    "ExternalProviderReference" : Math.random().toString(),
+                    "ExternalMerchantReference" : "Order-xyz-35e8490e-2ec9-4c82-978e-c712a3f5ba16",
+                    "ExternalProviderName" : "Stripe",
+                    "ExternalProviderPaymentMethod" : "PAYPAL"
+                }
+            };
+            api.PayIns.createPayInIntentFullCapture(data.Id, toCreate, callback);
+        });
+    },
+
+    getNewPayInIntentFullRefund: function(api ,user, callback) {
+        this.getNewPayInIntentFullCapture(api, user, function(data) {
+            const fullRefundDto = {
+                "ExternalData" : {
+                    "ExternalProcessingDate" : 1727788165,
+                    "ExternalProviderReference" : Math.random().toString(),
+                    "ExternalMerchantReference" : "Order-xyz-35e8490e-2ec9-4c82-978e-c712a3f5ba16",
+                    "ExternalProviderName" : "Stripe",
+                    "ExternalProviderPaymentMethod" : "PAYPAL"
+                }
+            };
+            api.PayIns.createPayInIntentRefund(data.Id, fullRefundDto, callback);
         });
     },
 

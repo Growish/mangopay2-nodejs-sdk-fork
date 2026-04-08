@@ -28,6 +28,9 @@ describe('Conversions', function () {
             expect(quote.Id).not.to.be.null;
             expect(quote.ExpirationDate).not.to.be.null;
             expect(quote.Status).to.equal("ACTIVE");
+            expect(quote.MarginsResponse).not.to.be.null;
+            expect(quote.RequestedFees).not.to.be.null;
+            expect(quote.Fees.Amount).not.to.be.null;
         });
     });
 
@@ -129,6 +132,11 @@ describe('Conversions', function () {
                                     Currency: 'EUR',
                                     Amount: 79
                                 },
+                                Fees: {
+                                    Currency: 'EUR',
+                                    Type: 'PERCENTAGE',
+                                    Value: 10
+                                },
                                 Tag: 'Instant conversion test'
                             };
                             api.Conversions.createInstantConversion(instantConversion, function (data, response) {
@@ -145,6 +153,9 @@ describe('Conversions', function () {
             expect(instantConversion.DebitedFunds.Amount).not.to.be.null;
             expect(instantConversion.CreditedFunds.Amount).not.to.be.null;
             expect(instantConversion.Status).to.equal('SUCCEEDED');
+            expect(instantConversion.MarginsResponse).not.to.be.null;
+            expect(instantConversion.RequestedFees).not.to.be.null;
+            expect(instantConversion.Fees.Amount).not.to.be.null;
         });
     });
 
@@ -237,7 +248,7 @@ describe('Conversions', function () {
     describe('Create Client Wallets Quoted Conversion', function () {
         var created;
         before(function (done) {
-            helpers.getNewQuote(api, function (data, response) {
+            helpers.getNewQuoteWithoutFees(api, function (data, response) {
                 quote = data;
 
                 var body = {

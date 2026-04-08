@@ -8,13 +8,25 @@ describe('PayOuts', function() {
 
     before(function(done){
         api.Users.create(john, function(){
-            done();
+            helpers.getNewPayoutBankWire(api, john, function(data, response){
+                payOut = data;
+                done();
+            });
         });
     });
 
     describe('Create', function() {
+        it('should be created', function(){
+            expect(payOut.Id).to.exist;
+            expect(payOut.PaymentType).to.equal('BANK_WIRE');
+            expect(payOut.ChargeBearer).to.not.be.undefined;
+        });
+    });
+
+    describe('Create with RecipientId', function() {
+        var payOut;
         before(function(done){
-            helpers.getNewPayoutBankWire(api, john, function(data, response){
+            helpers.getNewPayoutBankWireWithRecipientId(api, john, function(data, response){
                 payOut = data;
                 done();
             });
@@ -22,6 +34,7 @@ describe('PayOuts', function() {
 
         it('should be created', function(){
             expect(payOut.Id).to.exist;
+            expect(payOut.RecipientId).to.exist;
             expect(payOut.PaymentType).to.equal('BANK_WIRE');
         });
     });

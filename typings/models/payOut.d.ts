@@ -3,11 +3,13 @@ import { transfer } from "./transfer";
 import { enums } from "../enums";
 import { money } from "./money";
 import { base } from "../base";
+import { recipient } from "./recipient";
 
 export namespace payOut {
     import MoneyData = money.MoneyData;
     import FallbackReasonData = base.FallbackReasonData;
     import PayoutPaymentRefData = base.PayoutPaymentRefData;
+    import VerificationOfPayee = recipient.VerificationOfPayee;
 
     type PayoutModeRequestedType = "STANDARD" | "INSTANT_PAYMENT" | "INSTANT_PAYMENT_ONLY" | "RTGS_PAYMENT";
     type PayoutModeAppliedType = "STANDARD" | "INSTANT_PAYMENT" | "RTGS_PAYMENT" | "PENDING_RESPONSE";
@@ -21,9 +23,10 @@ export namespace payOut {
         PaymentType: enums.IPayOutPaymentType["BankWire"];
 
         /**
-         * An ID of a Bank Account
+         * An ID of a Bank Account.
+         * Null if RecipientId is provided.
          */
-        BankAccountId: string;
+        BankAccountId?: string;
 
         /**
          * A custom reference you wish to appear on the user’s bank statement (your Client Name is already shown). This reference can contain max 12 characters
@@ -38,6 +41,19 @@ export namespace payOut {
         ModeRequested: PayoutModeRequestedType;
 
         ModeApplied: PayoutModeAppliedType;
+
+        RecipientVerificationOfPayee?: VerificationOfPayee;
+
+        /**
+         * Recipient identifier.
+         * Null if BankAccountId is provided.
+         */
+        RecipientId?: string;
+
+        /**
+         * Possible values: OUR / SHA
+         */
+        ChargeBearer?: string;
     }
 
     interface CreatePayOut {
@@ -58,8 +74,15 @@ export namespace payOut {
 
         /**
          * An ID of a Bank Account
+         * Null if RecipientId is provided.
          */
-        BankAccountId: string;
+        BankAccountId?: string;
+
+        /**
+         * Recipient identifier.
+         * Null if BankAccountId is provided.
+         */
+        RecipientId?: string;
 
         /**
          * The ID of the wallet that was debited
@@ -83,6 +106,11 @@ export namespace payOut {
          * but if any prerequisite is not met or another problem occurs, there is no fallback: the wallet is automatically refunded and the payout is not completed.
          */
         PayoutModeRequested?: PayoutModeRequestedType;
+
+        /**
+         * Possible values: OUR / SHA
+         */
+        ChargeBearer?: string;
     }
 
     interface CheckPayOutEligibility {

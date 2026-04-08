@@ -1,11 +1,6 @@
 var expect = require('chai').expect;
 var helpers = require('../helpers');
-const mangopay = require("../../index");
-
-var api = global.api = new mangopay({
-    clientId: 'sdk-unit-tests',
-    clientApiKey: 'cqFfFrWfCcb7UadHNxx2C9Lo6Djw8ZduLi7J9USTmu8bhxxpju'
-});
+var api = require('../main');
 
 describe('Rate Limits', function () {
     expect(api.rateLimits).to.be.empty;

@@ -6,12 +6,7 @@ var Ubo = require('../../lib/models/Ubo');
 var UboDeclarationStatus = require('../../lib/models/UboDeclarationStatus');
 var UserNatural = require('../../lib/models/UserNatural');
 var UserLegal = require('../../lib/models/UserLegal');
-var mangopay = require('../../lib/mangopay');
-
-var api = global.api = new mangopay({
-    clientId: 'sdk-unit-tests',
-    clientApiKey: 'cqFfFrWfCcb7UadHNxx2C9Lo6Djw8ZduLi7J9USTmu8bhxxpju'
-});
+var api = require('../main');
 
 describe('UBO Declarations', function () {
     var user = new UserLegal(helpers.data.getUserLegal());

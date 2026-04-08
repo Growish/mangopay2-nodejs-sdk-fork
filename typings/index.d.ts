@@ -46,6 +46,7 @@ import { cardPreAuthorization } from "./models/cardPreauthorization";
 import { entityBase } from "./models/entityBase";
 import { user } from "./models/user";
 import { payIn } from "./models/payIn";
+import { acquiring } from "./models/acquiring";
 import { refund } from "./models/refund";
 import { repudiation } from "./models/repudiation";
 import { client } from "./models/client";
@@ -76,6 +77,8 @@ import { identityVerification } from "./models/identityVerification";
 import { recipient } from "./models/recipient";
 import { Recipients } from "./services/Recipients";
 import { Settlements } from "./services/Settlements";
+import { Acquiring } from "./services/Acquiring";
+import { OptionsHelper } from "./services/OptionsHelper";
 
 export = MangoPay;
 
@@ -115,6 +118,8 @@ declare class MangoPay {
     IdentityVerifications: IdentityVerifications;
     Recipients: Recipients;
     Settlements: Settlements;
+    Acquiring: Acquiring;
+    OptionsHelper: OptionsHelper;
 
     models: typeof MangoPay.models;
 
@@ -664,10 +669,6 @@ declare namespace MangoPay {
             constructor(data: any);
         }
 
-        class PayInPaymentDetailsPayconiq extends PayInPaymentDetails {
-            constructor(data: any);
-        }
-
         class PayInPaymentDetailsCardDirect extends PayInPaymentDetails {
             constructor(data: any);
         }
@@ -841,6 +842,7 @@ declare namespace MangoPay {
         card,
         cardPreAuthorization,
         cardRegistration,
+        cardValidation,
         client,
         dispute,
         disputeDocument,
@@ -877,6 +879,7 @@ declare namespace MangoPay {
         conversion,
         virtualAccount,
         identityVerification,
-        recipient
+        recipient,
+        acquiring
     };
 }

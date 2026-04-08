@@ -29,7 +29,6 @@ export namespace payIn {
         | CardWebPayInData
         | BankWireDirectPayInData
         | BankWireExternalInstructionPayInData
-        | PayconiqWebPayInData
         | DirectDebitDirectPayInData
         | MbwayWebPayInData
         | BancontactWebPayInData
@@ -144,6 +143,12 @@ export namespace payIn {
          * The type of execution for the payin
          */
         ExecutionType: PayInExecutionType;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface CardWebPayInData extends BasePayInData {
@@ -192,6 +197,11 @@ export namespace payIn {
          * Name of the end-user’s bank
          */
         BankName: string;
+
+        /**
+         * Authentication result
+         */
+        AuthenticationResult?: AuthenticationResult;
     }
 
     interface CardWebExtendedPayInData {
@@ -314,6 +324,12 @@ export namespace payIn {
          * The BIC identifier of the end-user’s bank
          */
         Bic?: string;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface CardDirectPayInData extends BasePayInData {
@@ -376,6 +392,16 @@ export namespace payIn {
          * TelephoneOrder – Payment received via mail order or telephone order (MOTO).
          */
         PaymentCategory: string;
+
+        /**
+         * Authentication result
+         */
+        AuthenticationResult?: AuthenticationResult;
+
+        /**
+         * Preferred Card Network
+         */
+        PreferredCardNetwork?: string;
     }
 
     interface MbwayWebPayInData extends BasePayInData {
@@ -459,11 +485,6 @@ export namespace payIn {
          * If the Phone parameter is sent, then RedirectURL is not returned and ReturnURL is ignored.
          */
         Phone?: string;
-
-        /**
-         * The unique reference generated for the profiling session, used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
-         */
-        ProfilingAttemptReference?: string;
     }
 
     interface PayPalWebPayInData extends BasePayInData {
@@ -703,6 +724,17 @@ export namespace payIn {
          * TelephoneOrder – Payment received via mail order or telephone order (MOTO).
          */
         PaymentCategory?: string;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
+
+        /**
+         * Preferred Card Network
+         */
+        PreferredCardNetwork?: string;
     }
 
     interface CreateMbwayWebPayIn {
@@ -746,6 +778,12 @@ export namespace payIn {
          * Custom data that you can add to this item
          */
         Tag?: string;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface CreateBancontactWebPayIn {
@@ -798,6 +836,12 @@ export namespace payIn {
          * Custom data that you can add to this item
          */
         Tag?: string;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface CreateBizumWebPayIn {
@@ -843,7 +887,8 @@ export namespace payIn {
         StatementDescriptor?: string;
 
         /**
-         * The unique reference generated for the profiling session, used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
          */
         ProfilingAttemptReference?: string;
 
@@ -914,6 +959,8 @@ export namespace payIn {
         Reference?: string;
 
         CancelURL?: string;
+
+        DataCollectionId?: string;
     }
 
     interface CreateMultibancoWebPayIn {
@@ -956,6 +1003,12 @@ export namespace payIn {
          * Custom data that you can add to this item
          */
         Tag?: string;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface CreateSatispayWebPayIn {
@@ -1003,6 +1056,12 @@ export namespace payIn {
          * Custom data that you can add to this item
          */
         Tag?: string;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface CreateBlikWebPayIn {
@@ -1063,6 +1122,12 @@ export namespace payIn {
          * Required when creating a Blik PayIn with code.
          */
         BrowserInfo?: BrowserInfoData;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface LineItemData {
@@ -1102,6 +1167,11 @@ export namespace payIn {
          * The unique identifier of the line item.
          */
         Sku: string;
+
+        /**
+         * The discount applied to the item.
+         */
+        Discount?: number;
     }
 
     interface CreateLineItem {
@@ -1141,6 +1211,11 @@ export namespace payIn {
          * The unique identifier of the line item.
          */
         Sku?: string;
+
+        /**
+         * The discount applied to the item.
+         */
+        Discount?: number;
     }
 
     interface DirectDebitDirectPayInData extends BasePayInData {
@@ -1180,6 +1255,12 @@ export namespace payIn {
         MandateId: string;
 
         StatementDescriptor?: string;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface DirectDebitWebPayInData extends BasePayInData {
@@ -1261,6 +1342,12 @@ export namespace payIn {
          * The type of web direct debit
          */
         DirectDebitType: DirectDebitType;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface CardPreAuthorizedPayInData extends BasePayInData {
@@ -1312,6 +1399,12 @@ export namespace payIn {
          * The ID of the Preauthorization object
          */
         PreauthorizationId: string;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface BankAccountData {
@@ -1393,6 +1486,12 @@ export namespace payIn {
         "AuthorId" | "CreditedWalletId" | "DeclaredDebitedFunds" | "DeclaredFees"> {
         ExecutionType: "DIRECT";
         PaymentType: "BANK_WIRE";
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface PayInRecurringRegistrationState {
@@ -1656,6 +1755,13 @@ export namespace payIn {
          * Information about the card
          */
         CardInfo: CardInfoData;
+
+        PaymentCategory?: string;
+
+        /**
+         * Authentication result
+         */
+        AuthenticationResult?: AuthenticationResult;
     }
 
     interface CreateRecurringPayInCIT {
@@ -1702,6 +1808,8 @@ export namespace payIn {
          * of the Recurring PayIn Registration. An amount must be transmitted during either registration or pay-in.
          */
         Fees?: MoneyData;
+
+        PaymentCategory?: string;
     }
 
     interface CreateRecurringPayPalPayInCIT {
@@ -1763,6 +1871,8 @@ export namespace payIn {
          * The platform’s order reference for the transaction.
          */
         Reference?: string;
+
+        DataCollectionId?: string;
     }
 
     interface CreateRecurringPayInMIT {
@@ -1793,6 +1903,8 @@ export namespace payIn {
          * Custom data that you can add to this item
          */
         Tag?: string;
+
+        PaymentCategory?: string;
     }
 
     interface CreateRecurringPayPalPayInMIT {
@@ -1870,79 +1982,8 @@ export namespace payIn {
          * The platform’s order reference for the transaction.
          */
         Reference?: string;
-    }
 
-    interface PayconiqWebPayInData extends BasePayInData {
-        ExecutionType: "WEB";
-        PaymentType: "PAYCONIQ";
-
-        /**
-         * Time in millis when the page consult will expire.
-         */
-        ExpirationDate: Timestamp;
-
-        /**
-         * The URL to redirect to after payment (whether successful or not)
-         */
-        ReturnURL: string;
-
-        /**
-         * The URL to redirect to user to for them to proceed with the payment
-         */
-        RedirectURL: string;
-
-        /**
-         * The URL to be used in App2App workflow
-         */
-        DeepLinkURL: string;
-
-        Country: CountryISO;
-
-        QRCodeURL: string;
-
-        StatementDescriptor: string;
-    }
-
-    interface CreatePayconiqWebPayInData {
-        ExecutionType: "WEB";
-        PaymentType: "PAYCONIQ";
-
-        /**
-         * Custom data that you can add to this item
-         */
-        Tag?: string;
-
-        /**
-         * A user's ID
-         */
-        AuthorId: string;
-
-        /**
-         * The ID of the wallet where money will be credited
-         */
-        CreditedWalletId: string;
-
-        /**
-         * Information about the funds that are being debited
-         */
-        DebitedFunds: MoneyData;
-
-        /**
-         * Information about the fees that were taken by the client for this transaction (and were hence transferred to the Client's platform wallet)
-         */
-        Fees: MoneyData;
-
-        /**
-         * The URL to redirect to after payment (whether successful or not)
-         */
-        ReturnURL: string;
-
-        /**
-         * The Country of the Address
-         */
-        Country: CountryISO;
-
-        StatementDescriptor?: string;
+        DataCollectionId?: string;
     }
 
     interface CreateCardPreAuthorizedDepositPayIn {
@@ -2025,6 +2066,12 @@ export namespace payIn {
          * Custom data that you can add to this item
          */
         Tag?: string;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
     interface ApplePayPayInData extends BasePayInData {
         ExecutionType: "DIRECT";
@@ -2062,6 +2109,11 @@ export namespace payIn {
          * Custom data that you can add to this item
          */
         Tag: string;
+
+        /**
+         * Authentication result
+         */
+        AuthenticationResult?: AuthenticationResult;
     }
 
     interface ApplePayPaymentData {
@@ -2153,6 +2205,12 @@ export namespace payIn {
          * Custom data that you can add to this item
          */
         Tag?: string;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface GooglePayDirectPayInData extends BasePayInData {
@@ -2220,6 +2278,11 @@ export namespace payIn {
          * This is the URL where users are automatically redirected after the payment is validated
          */
         ReturnURL: string;
+
+        /**
+         * Authentication result
+         */
+        AuthenticationResult?: AuthenticationResult;
     }
 
     interface KlarnaWebPayInData extends BasePayInData {
@@ -2381,6 +2444,12 @@ export namespace payIn {
          * characters or spaces. See here for important info. Note that each bank handles this information differently, some show less or no information.
          */
         StatementDescriptor?: string;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface IdealWebPayInData extends BasePayInData {
@@ -2460,6 +2529,12 @@ export namespace payIn {
          * Custom data that you can add to this object
          */
         Tag?: string;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface GiropayWebPayInData extends BasePayInData {
@@ -2589,6 +2664,12 @@ export namespace payIn {
          * Custom data that you can add to this object
          */
         Tag?: string;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface CreateSwishWebPayIn {
@@ -2641,6 +2722,12 @@ export namespace payIn {
          *  <p>In both cases you need to provide the relevant ReturnURL, whether to your app or website.</p>
          */
         PaymentFlow?: string;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface CreateTwintWebPayIn {
@@ -2683,6 +2770,12 @@ export namespace payIn {
          * Custom data that you can add to this object
          */
         Tag?: string;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface BinData {
@@ -2936,6 +3029,12 @@ export namespace payIn {
          * Custom data that you can add to this item
          */
         Tag?: string;
+
+        /**
+         * The unique reference generated for the profiling session,
+         * used by the fraud prevention solution to produce recommendations for the transaction using the profiling data.
+         */
+        ProfilingAttemptReference?: string;
     }
 
     interface PayInIntentData extends entityBase.EntityBaseData {
@@ -2993,15 +3092,21 @@ export namespace payIn {
          */
         Captures: PayInIntentCapture[];
 
+        Capture: PayInIntentCapture;
+
         /**
          * Information about the amounts refunded against the intent
          */
         Refunds: PayInIntentRefund[];
 
+        Refund: PayInIntentRefund;
+
         /**
          * Information about the amounts refunded against the intent
          */
         Disputes: PayInIntentDispute[];
+
+        Dispute: PayInIntentDispute;
 
         /**
          * Information about the amounts split against the intent
@@ -3012,6 +3117,10 @@ export namespace payIn {
          * The unique identifier of the settlement linked to this intent in Mangopay ecosystem
          */
         SettlementId: string;
+
+        UnfundedAmount: number;
+
+        Decision: string;
     }
 
     interface PayInIntentExternalData {
@@ -3208,6 +3317,8 @@ export namespace payIn {
          */
         DiscountAmount?: number;
 
+        UnfundedSellerAmount?: number;
+
         /**
          * The item category
          */
@@ -3247,6 +3358,11 @@ export namespace payIn {
          * The item total split amount
          */
         SplitAmount?: number;
+
+        /**
+         * The source wallet identifier
+         */
+        SplitOriginWalletId?: string;
     }
 
     interface CreatePayInIntentPartialCaptureLineItem {
@@ -3423,6 +3539,8 @@ export namespace payIn {
          * The total of all LineItems FeesAmount mus equal the PlatformFees amount
          */
         LineItems: PayInIntentLineItem[];
+
+        UnfundedAmount?: number;
     }
 
     interface CreatePayInIntentFullCapture {
@@ -3464,14 +3582,14 @@ export namespace payIn {
     }
 
     interface FullCancelPayInIntent {
-        ExternalData: CancelPayInIntentExternalData;
+        ExternalData?: CancelPayInIntentExternalData;
     }
 
     interface PartialCancelPayInIntent {
         Amount: number;
         Currency?: CurrencyISO;
         PlatformFees?: number;
-        ExternalData: CancelPayInIntentExternalData;
+        ExternalData?: CancelPayInIntentExternalData;
         LineItems: CancelPayInIntentLineItem[];
     }
 
@@ -3479,12 +3597,12 @@ export namespace payIn {
         /**
          * The date at which the transaction was created
          */
-        ExternalProcessingDate: Timestamp;
+        ExternalProcessingDate?: Timestamp;
 
         /**
          * The unique identifier of the transaction at the provider level
          */
-        ExternalProviderReference: string;
+        ExternalProviderReference?: string;
 
         /**
          * The unique identifier of the transaction at the merchant level
@@ -3548,6 +3666,11 @@ export namespace payIn {
          * The status of the split
          */
         Status?: string;
+
+        /**
+         * The source wallet identifier
+         */
+        SplitOriginWalletId?: string;
     }
 
     interface CreatePayInIntentSplit {
@@ -3575,6 +3698,11 @@ export namespace payIn {
          * The description of the split object
          */
         Description?: string;
+
+        /**
+         * The source wallet identifier
+         */
+        SplitOriginWalletId?: string;
     }
 
     interface CreatePayInIntentSplits {
@@ -3610,5 +3738,251 @@ export namespace payIn {
 
     interface PayByBankSupportedBank {
         SupportedBanks: SupportedBank;
+    }
+
+    interface CreateFullPayInIntentRefund {
+        /**
+         * Information about the external processed refund
+         */
+        ExternalData: CreateFullPayInIntentRefundExternalData
+    }
+
+    interface FullReversePayInIntentRefund {
+        /**
+         * Information about the external processed transaction
+         */
+        ExternalData: FullReversePayInIntentRefundExternalData
+    }
+
+    interface CreatePartialPayInIntentRefund {
+        /**
+         * An amount of money in the smallest sub-division of the currency
+         */
+        Amount: number;
+
+        /**
+         * The currency of the funds
+         */
+        Currency?: CurrencyISO;
+
+        /**
+         * Information about the fees
+         */
+        PlatformFeesAmount?: number;
+
+        /**
+         * Information about the external processed refund
+         */
+        ExternalData: CreatePartialPayInIntentRefundExternalData
+
+        /**
+         * Information about the items refunded
+         */
+        LineItems: CreatePartialPayInIntentRefundLineItem[];
+    }
+
+    interface PartialReversePayInIntentRefund {
+        /**
+         * An amount of money in the smallest sub-division of the currency
+         */
+        Amount: number;
+
+        /**
+         * The currency of the funds
+         */
+        Currency?: CurrencyISO;
+
+        /**
+         * Information about the fees
+         */
+        PlatformFeesAmount?: number;
+
+        /**
+         * Information about the external processed transaction
+         */
+        ExternalData: PartialReversePayInIntentRefundExternalData
+
+        /**
+         * Information about the items reversed in the transaction
+         */
+        LineItems: PartialReversePayInIntentRefundLineItem[];
+    }
+
+    interface CreateFullPayInIntentDispute {
+        /**
+         * Information about the external processed dispute
+         */
+        ExternalData: CreateFullPayInIntentDisputeExternalData
+    }
+
+    interface CreatePartialPayInIntentDispute {
+        /**
+         * An amount of money in the smallest sub-division of the currency
+         */
+        Amount: number;
+
+        /**
+         * The currency of the funds
+         */
+        Currency?: CurrencyISO;
+
+        /**
+         * Information about the fees
+         */
+        PlatformFeesAmount?: number;
+
+        /**
+         * Information about the external processed dispute
+         */
+        ExternalData: CreatePartialPayInIntentDisputeExternalData
+
+        /**
+         * Information about the items disputed
+         */
+        LineItems: CreatePartialPayInIntentDisputeLineItem[];
+    }
+
+    interface CreateFullPayInIntentRefundExternalData {
+        /**
+         * The date at which the refund was created
+         */
+        ExternalProcessingDate: Timestamp;
+
+        /**
+         * The unique identifier of the refund at the provider level
+         */
+        ExternalProviderReference: string;
+
+        /**
+         * The unique identifier of the refund at the merchant level
+         */
+        ExternalMerchantReference?: string;
+
+        /**
+         * The name of the external provider processing the refund
+         *
+         * If provided but differs from the original intent, it will be ignored
+         */
+        ExternalProviderName?: string;
+
+        /**
+         * The name of the payment method used to process the refund
+         */
+        ExternalProviderPaymentMethod?: string;
+    }
+
+    interface CreateFullPayInIntentDisputeExternalData {
+        /**
+         * The date at which the dispute was created
+         */
+        ExternalProcessingDate: Timestamp;
+
+        /**
+         * The unique identifier of the refund at the provider level
+         */
+        ExternalProviderReference: string;
+
+        /**
+         * The unique identifier of the dispute at the merchant level
+         */
+        ExternalMerchantReference?: string;
+
+        /**
+         * The name of the external provider processing the dispute
+         *
+         * If provided but differs from the original intent, it will be ignored
+         */
+        ExternalProviderName?: string;
+
+        /**
+         * The name of the payment method used to process the dispute
+         */
+        ExternalProviderPaymentMethod?: string;
+    }
+
+    interface CreatePartialPayInIntentRefundExternalData extends CreateFullPayInIntentRefundExternalData {
+    }
+
+    interface CreatePartialPayInIntentDisputeExternalData extends CreateFullPayInIntentDisputeExternalData {
+    }
+
+    interface FullReversePayInIntentRefundExternalData {
+        /**
+         * The date at which the reversal was created
+         */
+        ExternalProcessingDate: Timestamp;
+
+        /**
+         * The unique identifier of the reversal at the provider level
+         */
+        ExternalProviderReference: string;
+
+        /**
+         * The unique identifier of the reversal at the merchant level
+         */
+        ExternalMerchantReference?: string;
+
+        /**
+         * The name of the external provider processing the reversal
+         */
+        ExternalProviderName?: string;
+
+        /**
+         * The name of the payment method used to process the reversal
+         */
+        ExternalProviderPaymentMethod?: string;
+    }
+
+    interface PartialReversePayInIntentRefundExternalData extends FullReversePayInIntentRefundExternalData {
+    }
+
+    interface CreatePartialPayInIntentRefundLineItem {
+        /**
+         * The unique identifier of the item in Mangopay ecosystem
+         */
+        Id: string;
+
+        /**
+         * The item total amount to be refunded
+         *
+         * Must be equal to the total Amount amount
+         */
+        Amount: number;
+    }
+
+    interface CreatePartialPayInIntentDisputeLineItem {
+        /**
+         * The unique identifier of the item in Mangopay ecosystem
+         */
+        Id: string;
+
+        /**
+         * The item total amount to be disputed
+         *
+         * Must be equal to the total Amount amount
+         */
+        Amount: number;
+    }
+
+    interface PartialReversePayInIntentRefundLineItem {
+        /**
+         * The unique identifier of the item in Mangopay ecosystem
+         */
+        Id: string;
+
+        /**
+         * The item total amount to be reversed
+         *
+         * Must be equal to the total Amount amount
+         */
+        Amount: number;
+    }
+
+    interface UpdatePayInIntentDisputeOutcome {
+        Decision: string;
+    }
+
+    interface AuthenticationResult {
+        AuthenticationType?: string;
     }
 }

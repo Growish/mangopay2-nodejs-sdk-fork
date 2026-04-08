@@ -407,7 +407,8 @@ describe('Users', function() {
                     TermsAndConditionsAccepted: true,
                     Birthday: 188301600,
                     Nationality: 'FR',
-                    CountryOfResidence: 'FR'
+                    CountryOfResidence: 'FR',
+                    ScaContext: 'USER_PRESENT'
                 }
             );
 
@@ -452,7 +453,8 @@ describe('Users', function() {
                         "PostalCode": "20007",
                         "Country": "US"
                     },
-                    CompanyNumber: "123456789"
+                    CompanyNumber: "123456789",
+                    ScaContext: 'USER_PRESENT'
                 }
             );
 
@@ -481,6 +483,23 @@ describe('Users', function() {
 
         it('Category should be OWNER', function() {
             expect(enrollmentResult.PendingUserAction.RedirectUrl).to.not.be.undefined;
+        });
+    });
+
+    describe('Manage consent', function(){
+        var consentResult;
+
+        before(function (done) {
+            api.Users.enroll(johnOwner.Id).then(function(data){
+                api.Users.manageConsent(johnOwner.Id).then(function(data){
+                    consentResult = data;
+                    done();
+                });
+            });
+        });
+
+        it('Correct result expected', function() {
+            expect(consentResult.PendingUserAction.RedirectUrl).to.not.be.undefined;
         });
     });
 
@@ -1279,6 +1298,25 @@ describe('Users', function() {
 
         it('should fail', function () {
             expect(successResult.CompanyNumber).not.to.be.undefined;
+        });
+    });
+
+    describe('Get Sca Status', function() {
+        const activeUserId = "user_m_01JKZW095BFB2TRQMCZ8GE7M8D";
+        var scaStatus;
+
+        before(function(done){
+            api.Users.getScaStatus(activeUserId, function (data, response) {
+                scaStatus = data;
+                done();
+            });
+        });
+
+        it('John should be the same', function(){
+            expect(scaStatus).to.not.be.undefined;
+            expect(scaStatus.IsEnrolled).to.be.true;
+            expect(scaStatus.LastEnrollmentDate).to.not.be.undefined;
+            expect(scaStatus.ConsentScope.ContactInformationUpdate).to.not.be.undefined;
         });
     });
 });

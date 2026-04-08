@@ -6,6 +6,7 @@ import { money } from "./money";
 import { securityInfo } from "./securityInfo";
 import { shipping } from "./shipping";
 import { card } from "./card";
+import { payIn } from "./payIn";
 
 export namespace cardPreAuthorization {
     import BillingData = billing.BillingData;
@@ -14,6 +15,7 @@ export namespace cardPreAuthorization {
     import SecurityInfoData = securityInfo.SecurityInfoData;
     import ShippingData = shipping.ShippingData;
     import CardInfoData = card.CardInfoData;
+    import AuthenticationResult = payIn.AuthenticationResult;
 
     type PreAuthorizationExecutionType = "DIRECT";
 
@@ -153,5 +155,10 @@ export namespace cardPreAuthorization {
          * TelephoneOrder – Payment received via mail order or telephone order (MOTO).
          */
         PaymentCategory: string;
+
+        /**
+         * Authentication result
+         */
+        AuthenticationResult?: AuthenticationResult;
     }
 }

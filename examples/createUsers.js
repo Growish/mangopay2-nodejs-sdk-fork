@@ -5,7 +5,7 @@
  */
 
 
-// In your app you will require('mangopay2-nodejs-sdk')
+// In your app you will require('mangopay4-nodejs-sdk')
 var mangopay = require('../index');
 
 // In your app you will define your own set of configurations.

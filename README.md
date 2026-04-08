@@ -1,4 +1,4 @@
-Mangopay Node.js SDK [![Build Status](https://travis-ci.org/Mangopay/mangopay2-nodejs-sdk.svg?branch=master)](https://travis-ci.org/Mangopay/mangopay2-nodejs-sdk)
+Mangopay Node.js SDK
 =================================================
 MangopaySDK is a Node.js client library to work with [Mangopay REST API](http://docs.mangopay.com/api-references/).
 
@@ -7,11 +7,11 @@ Installation
 -------------------------------------------------
 Install the module via npm
 
-    npm install mangopay2-nodejs-sdk --save
+    npm install mangopay4-nodejs-sdk --save
 
 Usage inside your app
 
-    var mangopay = require('mangopay2-nodejs-sdk');
+    var mangopay = require('mangopay4-nodejs-sdk');
 
     var api = new mangopay({
         clientId: 'your_client_id',
@@ -34,7 +34,84 @@ Supported options
 |connectionTimeout|30000|Set the connection timeout limit (in milliseconds)|
 |responseTimeout|80000|Set the response timeout limit (in milliseconds)|
 |apiVersion|'v2.01'|API Version|
-|errorHandler|```function(options, err) {console.error(options, err)}```|Set a custom error handler
+|errorHandler|```function(options, err) {console.error(options, err)}```|Set a custom error handler|
+|cert|null|Base64-encoded string of the mTLS certificate `.pem` file content|
+|key|null|Base64-encoded string of the mTLS private `.key` file content|
+|ca|null|Base64-encoded string of the private or custom certificate authority (optional)|
+|passphrase|null|Passphrase for an encrypted mTLS private key (optional)|
+|certFilePath|null|Path to the mTLS certificate `.pem` file (takes precedence over `cert` if set)|
+|keyFilePath|null|Path to the mTLS private `.key` file (takes precedence over `key` if set)|
+|caFilePath|null|Path to the private or custom certificate authority file (takes precedence over `ca` if set)|
+
+
+mTLS
+-------------------------------------------------
+### Set the base URL for mTLS
+
+Using mTLS authentication requires your integration to call a base URL with a different hostname from the standard API:
+
+* Sandbox: `https://api-mtls.sandbox.mangopay.com`
+* Production: `https://api-mtls.mangopay.com`
+
+If using mTLS, your integration should use the `api-mtls` URLs for all API calls, including OAuth token generation.
+
+**Caution:** Ensure you set the mTLS base URL, as shown in the configuration examples below. If you don’t, the mTLS certificate will not be transferred to Mangopay. When mTLS is enforced, your integration will result in an error.
+
+### Configure the SDK’s mTLS properties
+
+The Node.js SDK allows you to load Base64-encoded strings from your environment variables. You can also load locally stored file paths, which may be useful during testing.
+
+**Caution:** The file path properties take precedence if both are set.
+
+#### Base64-encoded strings
+
+When your `.pem` certificate and private `.key` are stored as encoded strings in a secrets manager, you can load them using the following configuration properties.
+
+**Best practice:** Use this option in Production.
+
+  | Property     | Type              | Description                                                                   |
+  | ------------ | ----------------- |-------------------------------------------------------------------------------|
+  | `cert`       | string            | Base64-encoded string of the certificate `.pem` file content.                 |
+  | `key`        | string            | Base64-encoded string of the private `.key` file content.                     |
+  | `ca`         | string (optional) | Base64-encoded string of the private or custom certificate authority, if used. |
+  | `passphrase` | string (optional) | String of the passphrase for an encrypted private key.                        |
+
+  ```jsx  theme={null}
+  const mangopay = new Mangopay({
+    clientId: 'your-mangopay-client-id',
+    clientApiKey: 'your-api-key',
+    baseUrl: 'https://api-mtls.sandbox.mangopay.com', // mTLS base URL
+    cert: process.env.CERTIFICATE_PEM_B64,      // Base64-encoded
+    key: process.env.PRIVATE_KEY_B64,        // Base64-encoded 
+    ca: process.env.YOUR_CUSTOM_CA,          // Base64-encoded (optional)
+    passphrase: process.env.YOUR_CERT_PASSPHRASE, // (optional)
+  });
+  ```
+
+#### File paths
+
+If your `.pem` certificate and private `.key` are stored locally, for example during testing, you can load them using the following properties.
+
+**Caution:** If the file path properties are set, they take precedence and the Base64-encoded equivalents are ignored.
+
+  | Property       | Type              | Description                                                   |
+  | -------------- | ----------------- | ------------------------------------------------------------- |
+  | `certFilePath` | string            | Path to the certificate `.pem` file.                          |
+  | `keyFilePath`  | string            | Path to the private `.key` file.                              |
+  | `caFilePath`   | string (optional) | Path to the private or custom certificate authority, if used. |
+  | `passphrase`   | string (optional) | String of the passphrase for an encrypted private key.         |
+
+  ```jsx  theme={null}
+  const mangopay = new Mangopay({
+    clientId: 'your-mangopay-client-id',
+    clientApiKey: 'your-api-key',
+    baseUrl: 'https://api-mtls.sandbox.mangopay.com', // mTLS base URL
+    certFilePath: '/path/to/certificate.pem',
+    keyFilePath: '/path/to/private.key',
+    caFilePath: '/path/to/custom-ca.crt',          // optional
+    passphrase: 'your-cert-passphrase',   // optional
+  });
+  ```
 
 Documentation
 -------------------------------------------------

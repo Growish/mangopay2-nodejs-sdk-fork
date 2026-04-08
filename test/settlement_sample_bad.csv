@@ -4,5 +4,5 @@
 SettlementDate,19-06-2025,,,,,,,
 ExternalProviderName,Paypal,,,,,,,
 TotalSettlementFeesAmount,0,,,,,,,
-TotalNetSettlementAmount,1000,,,,,,,
-SettlementCurrency,EUR,,,,,,,
+TotalNetSettlementAmount,999999,,,,,,,
+SettlementCurrency,EUR,,,,,,

@@ -36,6 +36,7 @@ export namespace refund {
 
     interface RefundReason {
         RefundReasonType: RefundReasonType;
+        RefundReasonMessage?: string;
     }
 
     interface RefundData extends transaction.TransactionData {

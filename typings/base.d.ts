@@ -64,6 +64,47 @@ export namespace base {
          * @default `console.error`
          */
         errorHandler?(options: any, err: any): void;
+
+        /**
+         * Client certificate for mTLS (PEM string or Buffer).
+         * Use either this or `certFilePath`.
+         */
+        cert?: string | Buffer;
+
+        /**
+         * Client private key for mTLS (PEM string or Buffer).
+         * Use either this or `keyFilePath`.
+         */
+        key?: string | Buffer;
+
+        /**
+         * CA certificate for mTLS (PEM string or Buffer).
+         * Use either this or `caFilePath`.
+         */
+        ca?: string | Buffer;
+
+        /**
+         * Path to client certificate file for mTLS.
+         * Read at initialization time. Ignored if `cert` is set.
+         */
+        certFilePath?: string;
+
+        /**
+         * Path to client private key file for mTLS.
+         * Read at initialization time. Ignored if `key` is set.
+         */
+        keyFilePath?: string;
+
+        /**
+         * Path to CA certificate file for mTLS.
+         * Read at initialization time. Ignored if `ca` is set.
+         */
+        caFilePath?: string;
+
+        /**
+         * Passphrase for an encrypted private key (`key` or `keyFilePath`).
+         */
+        passphrase?: string;
     }
 
     interface RequestOptions {

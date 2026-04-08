@@ -1,12 +1,7 @@
 var expect = require('chai').expect;
 
 var helpers = require('../helpers');
-var mangopay = require('../../index');
-
-var api = global.api = new mangopay({
-    clientId: 'sdk-unit-tests',
-    clientApiKey: 'cqFfFrWfCcb7UadHNxx2C9Lo6Djw8ZduLi7J9USTmu8bhxxpju'
-});
+var api = require('../main');
 
 describe('PayIns', function () {
     var payIn;
@@ -680,8 +675,9 @@ describe('PayIns', function () {
 
         describe('Create a Recurring Payment', function() {
             var recurring;
+            var createdCit;
             before(function(done){
-                recurringPayin = {
+                const recurringPayin = {
                     AuthorId: john.Id,
                     CardId: cardId,
                     CreditedUserId: john.Id,
@@ -724,7 +720,7 @@ describe('PayIns', function () {
                 api.PayIns.createRecurringPayment(recurringPayin, function(data, response){
                     recurring = data;
                 }).then(function(){
-                    cit = {
+                    const cit = {
                         RecurringPayinRegistrationId: recurring.Id,
                         BrowserInfo: {
                             AcceptHeader: "text/html, application/xhtml+xml, application/xml;q=0.9, /;q=0.8",
@@ -752,18 +748,19 @@ describe('PayIns', function () {
                     };
 
                     api.PayIns.createRecurringPayInRegistrationCIT(cit, function(data, response){
-                        createCit = data;
+                        createdCit = data;
                         done();
-                    })
-                })
-            })
+                    });
+                });
+            });
 
             it('should be created', function() {
                 expect(recurring).to.not.be.null;
                 expect(recurring.FreeCycles).to.not.be.null;
-                expect(createCit).to.not.be.null;
-            })
-        })
+                expect(createdCit).to.not.be.null;
+                expect(createdCit.PaymentCategory).to.not.be.null;
+            });
+        });
 
         describe('Create a PayPal Recurring Payment CIT', function() {
             var recurring;
@@ -1076,122 +1073,6 @@ describe('PayIns', function () {
                 expect(updateRec.Id).not.to.be.undefined;
                 expect(updateRec.Status).not.to.be.undefined;
                 expect(updateRec.Status).to.equal("ENDED");
-            });
-        });
-    });
-
-    describe('Payconiq Web', function () {
-        var payIn, wallet;
-
-        before(function (done) {
-            wallet = {
-                Owners: [john.Id],
-                Currency: 'EUR',
-                Description: 'WALLET IN EUR'
-            };
-
-            api.Wallets.create(wallet).then(function () {
-                payIn = {
-                    Tag: 'custom meta',
-                    CreditedWalletId: wallet.Id,
-                    AuthorId: john.Id,
-                    DebitedFunds: {
-                        Amount: 1000,
-                        Currency: 'EUR'
-                    },
-                    Fees: {
-                        Amount: 0,
-                        Currency: 'EUR'
-                    },
-                    PaymentType: 'PAYCONIQ',
-                    ExecutionType: 'WEB',
-                    ReturnURL: 'http://www.my-site.com/returnURL',
-                    Country: 'BE'
-                };
-
-                api.PayIns.create(payIn, function (data, response) {
-                    payIn = data;
-                    done();
-                });
-            });
-        });
-
-        describe('Create', function () {
-            it('should create the PayIn', function () {
-                expect(payIn.Id).not.to.be.undefined;
-                expect(payIn.PaymentType).to.equal('PAYCONIQ');
-                expect(payIn.ExecutionType).to.equal('WEB');
-                expect(payIn.Status).to.equal('CREATED');
-                expect(payIn.RedirectURL).not.to.be.undefined;
-                expect(payIn.DeepLinkURL).not.to.be.undefined;
-            });
-        });
-
-        describe('Get', function () {
-            var getPayIn;
-            before(function (done) {
-                api.PayIns.get(payIn.Id, function (data, response) {
-                    getPayIn = data;
-                    done()
-                });
-            });
-
-            it('should get the PayIn', function () {
-                expect(getPayIn.Id).not.to.be.undefined;
-                expect(getPayIn.PaymentType).to.equal('PAYCONIQ');
-                expect(getPayIn.ExecutionType).to.equal('WEB');
-                expect(getPayIn.Status).to.equal('CREATED');
-                expect(payIn.RedirectURL).not.to.be.undefined;
-                expect(payIn.DeepLinkURL).not.to.be.undefined;
-            });
-        });
-    });
-
-    describe('Payconiq Web V2', function () {
-        var payIn, wallet;
-
-        before(function (done) {
-            wallet = {
-                Owners: [john.Id],
-                Currency: 'EUR',
-                Description: 'WALLET IN EUR'
-            };
-
-            api.Wallets.create(wallet).then(function () {
-                payIn = {
-                    Tag: 'custom meta',
-                    CreditedWalletId: wallet.Id,
-                    AuthorId: john.Id,
-                    DebitedFunds: {
-                        Amount: 100,
-                        Currency: 'EUR'
-                    },
-                    Fees: {
-                        Amount: 0,
-                        Currency: 'EUR'
-                    },
-                    PaymentType: 'PAYCONIQ',
-                    ExecutionType: 'WEB',
-                    ReturnURL: 'http://www.my-site.com/returnURL',
-                    Country: 'BE'
-                };
-
-                api.PayIns.createPayconiq(payIn, function (data, response) {
-                    payIn = data;
-                    done();
-                });
-            });
-        });
-
-        describe('Create', function () {
-            it('should create the PayIn', function () {
-                expect(payIn.Id).not.to.be.undefined;
-                expect(payIn.PaymentType).to.equal('PAYCONIQ');
-                expect(payIn.ExecutionType).to.equal('WEB');
-                expect(payIn.Status).to.equal('CREATED');
-                expect(payIn.RedirectURL).not.to.be.undefined;
-                expect(payIn.DeepLinkURL).not.to.be.undefined;
-                expect(payIn.QRCodeURL).not.to.be.undefined;
             });
         });
     });
@@ -1538,6 +1419,7 @@ describe('PayIns', function () {
                 expect(payIn.AuthorId).to.equal(john.Id);
                 expect(payIn.Type).to.equal('PAYIN');
                 expect(payIn.Phone).not.to.be.null;
+                expect(payIn.LineItems[1].Discount).to.equal(10);
             });
         });
 
@@ -2115,20 +1997,9 @@ describe('PayIns', function () {
             var payInIntent;
 
             before(function (done) {
-                helpers.getNewPayInIntentAuthorization(api, john, function (data) {
-                    const toCreate = {
-                        "ExternalData" : {
-                            "ExternalProcessingDate" : 1727788165,
-                            "ExternalProviderReference" : Math.random().toString(),
-                            "ExternalMerchantReference" : "Order-xyz-35e8490e-2ec9-4c82-978e-c712a3f5ba16",
-                            "ExternalProviderName" : "Stripe",
-                            "ExternalProviderPaymentMethod" : "PAYPAL"
-                        }
-                    };
-                    api.PayIns.createPayInIntentFullCapture(data.Id, toCreate, function(data) {
-                        payInIntent = data;
-                        done();
-                    });
+                helpers.getNewPayInIntentFullCapture(api, john, function (data) {
+                    payInIntent = data;
+                    done();
                 });
             });
 
@@ -2194,30 +2065,30 @@ describe('PayIns', function () {
             });
         });
 
-        // describe('Cancel intent', function () {
-        //     var canceled;
-        //     var created;
-        //
-        //     before(function (done) {
-        //         helpers.getNewPayInIntentAuthorization(api, john, function (data) {
-        //             created = data;
-        //             const cancelDetails = {
-        //                 "ExternalData" : {
-        //                     "ExternalProcessingDate" : 1728133765,
-        //                     "ExternalProviderReference" : Math.random().toString(),
-        //                 }
-        //             };
-        //             api.PayIns.fullCancelPayInIntent(created.Id, cancelDetails, function(data) {
-        //                 canceled = data;
-        //                 done();
-        //             });
-        //         });
-        //     });
-        //
-        //     it('should cancel the intent', function () {
-        //         expect(canceled.Status).to.equal('CANCELED');
-        //     });
-        // });
+        describe('Cancel intent', function () {
+            var canceled;
+            var created;
+
+            before(function (done) {
+                helpers.getNewPayInIntentAuthorization(api, john, function (data) {
+                    created = data;
+                    const cancelDetails = {
+                        "ExternalData" : {
+                            "ExternalProcessingDate" : 1728133765,
+                            "ExternalProviderReference" : Math.random().toString(),
+                        }
+                    };
+                    api.PayIns.fullCancelPayInIntent(created.Id, cancelDetails, function(data) {
+                        canceled = data;
+                        done();
+                    });
+                });
+            });
+
+            it('should cancel the intent', function () {
+                expect(canceled.Status).to.equal('CANCELLED');
+            });
+        });
 
         describe('Create splits', function () {
             var payInIntent;
@@ -2428,25 +2299,23 @@ describe('PayIns', function () {
 
         describe('Reverse split', function () {
             var payInIntent;
-            var error;
+            var reversedSplit;
 
             before(function (done) {
                 helpers.getNewPayInIntentAuthorization(api, john, function (data) {
                     payInIntent = data;
                     helpers.getNewPayInIntentSplit(api, data, function (data) {
                         api.PayIns.reversePayInIntentSplit(payInIntent.Id, data.Splits[0].Id, function (data) {
-                        })
-                            .catch(function (err) {
-                                error = err;
-                                done();
-                            });
+                            reversedSplit = data;
+                            done();
+                        });
                     });
                 });
             });
 
             it('should return error while trying to reverse the Split', function () {
                 // expect error. A success use case cannot be automated because it needs a PayIn to be created manually
-                expect(error.Errors.Status).to.contain("Reverse split requires a status in [AVAILABLE, REJECTED]");
+                expect(reversedSplit.Status).to.eq("REVERSED");
             });
         });
 
@@ -2493,6 +2362,270 @@ describe('PayIns', function () {
 
             it('should update the Split', function () {
                 expect(updated.Description).to.equal("updated description");
+            });
+        });
+
+        describe('Create intent full refund', function () {
+            var intentRefund;
+
+            before(function (done) {
+                helpers.getNewPayInIntentFullRefund(api, john, function (data) {
+                    intentRefund = data;
+                    done();
+                });
+            });
+
+            it('should create the PayInIntent Full Refund', function () {
+                expect(intentRefund.Id).not.to.be.undefined;
+                expect(intentRefund.Status).to.equal('REFUNDED');
+            });
+        });
+
+        describe('Create intent partial refund', function () {
+            var intentRefund;
+
+            before(function (done) {
+                helpers.getNewPayInIntentFullCapture(api, john, function (data) {
+                    const partialRefundDto = {
+                        "Amount": 1000,
+                        "LineItems": [
+                            {
+                                "Id": data.LineItems[0].Id,
+                                "Amount": data.LineItems[0].TotalLineItemAmount
+                            }
+                        ],
+                        "ExternalData" : {
+                            "ExternalProcessingDate" : 1727788165,
+                            "ExternalProviderReference" : Math.random().toString(),
+                            "ExternalMerchantReference" : "Order-xyz-35e8490e-2ec9-4c82-978e-c712a3f5ba16",
+                            "ExternalProviderName" : "Stripe",
+                            "ExternalProviderPaymentMethod" : "PAYPAL"
+                        }
+                    };
+                    api.PayIns.createPayInIntentRefund(data.Id, partialRefundDto, function(data) {
+                        intentRefund = data;
+                        done();
+                    });
+                });
+            });
+
+            it('should create the PayInIntent Full Refund', function () {
+                expect(intentRefund.Id).not.to.be.undefined;
+                expect(intentRefund.Status).to.equal('REFUNDED');
+            });
+        });
+
+        describe('Fully reverse intent refund', function () {
+            var reversedIntentRefund;
+
+            before(function (done) {
+                helpers.getNewPayInIntentFullRefund(api, john, function (data) {
+                    const reverseDto = {
+                        "ExternalData" : {
+                            "ExternalProcessingDate" : 1727788165,
+                            "ExternalProviderReference" : Math.random().toString(),
+                            "ExternalMerchantReference" : "Order-xyz-35e8490e-2ec9-4c82-978e-c712a3f5ba16",
+                            "ExternalProviderName" : "Stripe",
+                            "ExternalProviderPaymentMethod" : "PAYPAL"
+                        }
+                    };
+                    api.PayIns.reversePayInIntentRefund(data.Id, data.Refund.Id, reverseDto, function(data) {
+                        reversedIntentRefund = data;
+                        done();
+                    });
+                });
+            });
+
+            it('should reverse the PayInIntent Full Refund', function () {
+                expect(reversedIntentRefund.Id).not.to.be.undefined;
+                expect(reversedIntentRefund.Status).to.equal('REFUND_REVERSED');
+            });
+        });
+
+        describe('Partially reverse intent refund', function () {
+            var reversedIntentRefund;
+
+            before(function (done) {
+                helpers.getNewPayInIntentFullRefund(api, john, function (data) {
+                    const reverseDto = {
+                        "Amount": 1000,
+                        "LineItems": [
+                            {
+                                "Id": data.LineItems[0].Id,
+                                "Amount": data.LineItems[0].TotalLineItemAmount
+                            }
+                        ],
+                        "ExternalData" : {
+                            "ExternalProcessingDate" : 1727788165,
+                            "ExternalProviderReference" : Math.random().toString(),
+                            "ExternalMerchantReference" : "Order-xyz-35e8490e-2ec9-4c82-978e-c712a3f5ba16",
+                            "ExternalProviderName" : "Stripe",
+                            "ExternalProviderPaymentMethod" : "PAYPAL"
+                        }
+                    };
+                    api.PayIns.reversePayInIntentRefund(data.Id, data.Refund.Id, reverseDto, function(data) {
+                        reversedIntentRefund = data;
+                        done();
+                    });
+                });
+            });
+
+            it('should reverse the PayInIntent Full Refund', function () {
+                expect(reversedIntentRefund.Id).not.to.be.undefined;
+                expect(reversedIntentRefund.Status).to.equal('REFUND_REVERSED');
+            });
+        });
+
+        describe('Create full intent dispute', function () {
+            var dispute;
+
+            before(function (done) {
+                helpers.getNewPayInIntentFullCapture(api, john, function (data) {
+                    const disputeDto = {
+                        "ExternalData" : {
+                            "ExternalProcessingDate" : 1727788165,
+                            "ExternalProviderReference" : Math.random().toString(),
+                            "ExternalMerchantReference" : "Order-xyz-35e8490e-2ec9-4c82-978e-c712a3f5ba16",
+                            "ExternalProviderName" : "Stripe",
+                            "ExternalProviderPaymentMethod" : "PAYPAL"
+                        }
+                    };
+                    api.PayIns.createPayInIntentDispute(data.Id, data.Capture.Id, disputeDto, function(data) {
+                        dispute = data;
+                        done();
+                    });
+                });
+            });
+
+            it('should reverse the PayInIntent Full Refund', function () {
+                expect(dispute.Id).not.to.be.undefined;
+                expect(dispute.Status).to.equal('DISPUTED');
+            });
+        });
+
+        describe('Update intent dispute outcome', function () {
+            var intent;
+            var dispute;
+            var outcome;
+
+            before(function (done) {
+                helpers.getNewPayInIntentFullCapture(api, john, function (data) {
+                    intent = data;
+                    const disputeDto = {
+                        "ExternalData" : {
+                            "ExternalProcessingDate" : 1727788165,
+                            "ExternalProviderReference" : Math.random().toString(),
+                            "ExternalMerchantReference" : "Order-xyz-35e8490e-2ec9-4c82-978e-c712a3f5ba16",
+                            "ExternalProviderName" : "Stripe",
+                            "ExternalProviderPaymentMethod" : "PAYPAL"
+                        }
+                    };
+                    api.PayIns.createPayInIntentDispute(intent.Id, intent.Capture.Id, disputeDto, function(data) {
+                        dispute = data;
+                        const dto = {
+                            Decision: 'DEFENDED'
+                        };
+                        api.PayIns.updatePayInIntentDisputeOutcome(intent.Id, intent.Capture.Id, dispute.Dispute.Id, dto, function (data) {
+                           outcome = data;
+                           done();
+                        });
+                    });
+                });
+            });
+
+            it('should update the dispute outcome', function () {
+                expect(outcome.Id).not.to.be.undefined;
+                expect(outcome.Decision).to.equal('DEFENDED');
+            });
+        });
+
+        describe('Create partial intent dispute', function () {
+            var dispute;
+
+            before(function (done) {
+                helpers.getNewPayInIntentFullCapture(api, john, function (data) {
+                    const disputeDto = {
+                        "Amount": 1000,
+                        "LineItems": [
+                            {
+                                "Id": data.LineItems[0].Id,
+                                "Amount": data.LineItems[0].TotalLineItemAmount
+                            }
+                        ],
+                        "ExternalData" : {
+                            "ExternalProcessingDate" : 1727788165,
+                            "ExternalProviderReference" : Math.random().toString(),
+                            "ExternalMerchantReference" : "Order-xyz-35e8490e-2ec9-4c82-978e-c712a3f5ba16",
+                            "ExternalProviderName" : "Stripe",
+                            "ExternalProviderPaymentMethod" : "PAYPAL"
+                        }
+                    };
+                    api.PayIns.createPayInIntentDispute(data.Id, data.Capture.Id, disputeDto, function(data) {
+                        dispute = data;
+                        done();
+                    });
+                });
+            });
+
+            it('should reverse the PayInIntent Full Refund', function () {
+                expect(dispute.Id).not.to.be.undefined;
+                expect(dispute.Status).to.equal('DISPUTED');
+            });
+        });
+    });
+
+    describe('PayPal Data Collection', function () {
+        var dataCollection;
+
+        before(function (done) {
+            const toCreate = {
+                "sender_account_id" : "A12345N343",
+                "sender_first_name" : "Jane",
+                "sender_last_name" : "Doe",
+                "sender_email" : "jane.doe@sample.com",
+                "sender_phone" : "(042) 1123 4567",
+                "sender_address_zip" : "75009",
+                "sender_country_code" : "FR",
+                "sender_create_date" : "2012-12-09T19:14:55.277-0:00",
+                "sender_signup_ip" : "10.220.90.20",
+                "sender_popularity_score" : "high",
+                "receiver_account_id" : "A12345N344",
+                "receiver_create_date" : "2012-12-09T19:14:55.277-0:00",
+                "receiver_email" : "jane@sample.com",
+                "receiver_address_country_code" : "FR",
+                "business_name" : "Jane Ltd",
+                "recipient_popularity_score" : "high",
+                "first_interaction_date" : "2012-12-09T19:14:55.277-0:00",
+                "txn_count_total" : "34",
+                "vertical" : "Household goods",
+                "transaction_is_tangible" : "0"
+            };
+            api.PayIns.createPayPalDataCollection(toCreate, function(data) {
+                dataCollection = data;
+                done();
+            });
+        });
+
+        describe('Create', function () {
+            it('should create the data collection', function () {
+                expect(dataCollection).not.to.be.undefined;
+                expect(dataCollection.dataCollectionId).not.to.be.undefined;
+            });
+        });
+
+        describe('Get', function () {
+            var getDataCollection;
+            before(function (done) {
+                api.PayIns.getPayPalDataCollection(dataCollection.dataCollectionId, function (data, response) {
+                    getDataCollection = data;
+                    done();
+                });
+            });
+
+            it('should get the data collection', function () {
+                expect(getDataCollection.dataCollectionId).to.equal(dataCollection.dataCollectionId);
+                expect(getDataCollection.sender_first_name).to.equal("Jane");
+                expect(getDataCollection.sender_last_name).to.equal("Doe");
             });
         });
     });

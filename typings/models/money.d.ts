@@ -42,4 +42,17 @@ export namespace money {
          */
         DebitedEMoney: MoneyData;
     }
+
+    interface CustomMoneyData extends MoneyDataOptionalAmount {
+        /**
+         * Property used for specifying fees.
+         * Defines how the fee is calculated (PERCENTAGE or FIXED)
+         */
+        Type?: string;
+
+        /**
+         * The fee amount or percentage.
+         */
+        Value?: number;
+    }
 }

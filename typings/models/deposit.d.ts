@@ -17,6 +17,7 @@ export namespace deposit {
     import CompleteBillingData = billing.CompleteBillingData;
     import _3DSVersion = payIn._3DSVersion;
     import CardInfoData = card.CardInfoData;
+    import AuthenticationResult = payIn.AuthenticationResult;
 
     type DepositStatus = ValueOf<enums.IDepositStatus>;
 
@@ -68,6 +69,11 @@ export namespace deposit {
         Applied3DSVersion: _3DSVersion;
 
         CardInfo: CardInfoData;
+
+        /**
+         * Authentication result
+         */
+        AuthenticationResult?: AuthenticationResult;
     }
 
     interface CreateDeposit {

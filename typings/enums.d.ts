@@ -10,7 +10,6 @@ export namespace enums {
         DirectDebit: "DIRECT_DEBIT";
         Preauthorized: "PREAUTHORIZED";
         PayPal: "PAYPAL";
-        Payconiq: "PAYCONIQ";
         Mbway: "MBWAY";
         Multibanco: "MULTIBANCO";
         Satispay: "SATISPAY";

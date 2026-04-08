@@ -29,6 +29,8 @@ export namespace reportV2 {
         ExternalProviderName?: string;
 
         Scheduled?: boolean;
+
+        SettlementId?: string;
     }
 
     interface ReportDataV2 extends entityBase.EntityBaseData {

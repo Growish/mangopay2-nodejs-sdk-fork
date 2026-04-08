@@ -77,6 +77,8 @@ export namespace recipient {
          * Information about the action required from the user
          */
         PendingUserAction: user.PendingUserActionData;
+
+        RecipientVerificationOfPayee?: VerificationOfPayee;
     }
 
     interface CreateRecipientData {
@@ -144,6 +146,11 @@ export namespace recipient {
          * Needed if LocalBankTransfer is undefined
          */
         InternationalBankTransfer?: Record<string, any>;
+
+        /**
+         * If provided, possible values: USER_PRESENT, USER_NOT_PRESENT
+         */
+        ScaContext?: string;
     }
 
     interface IndividualRecipientData {
@@ -214,5 +221,22 @@ export namespace recipient {
 
     interface PayoutMethodData extends entityBase.EntityBaseData {
         AvailablePayoutMethods: string[]
+    }
+
+    interface VerificationOfPayee {
+        /**
+         * A unique identifier of the VOP check performed by Mangopay.
+         */
+        RecipientVerificationId?: string;
+
+        /**
+         * The outcome of the VOP check performed by Mangopay
+         */
+        RecipientVerificationCheck: string;
+
+        /**
+         * The explanation of the check outcome
+         */
+        RecipientVerificationMessage: string;
     }
 }

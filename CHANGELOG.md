@@ -1,3 +1,157 @@
+## [1.68.0] - 2026-03-25
+### Added - Acquiring pay-in service
+- New `Acquiring` service with `createPayIn` (Card, iDEAL, Apple Pay, Google Pay, PayPal), `createPayInRefund`, `createPayPalDataCollection`, and `createCardValidation` methods
+- TypeScript typings under the `acquiring` namespace (`typings/models/acquiring.d.ts`, `typings/services/Acquiring.d.ts`)
+
+### Breaking change - Payconiq removed
+- Payconiq was discontinued on 4 December 2025; all related code has been removed: `PayInPaymentDetailsPayconiq` model, `PAYCONIQ` enum value, `createPayconiqWeb`/`getPayconiqWeb` methods, and associated TypeScript typings
+
+### Added - Klarna `Discount` field
+- Optional `Discount` field added to `LineItemData` and `CreateLineItem` interfaces in `payIn.d.ts`
+
+## [1.67.0] - 2026-03-19
+### Added - mTLS certificates support
+- mTLS certificates are now configurable in the SDK via file paths or encoded strings
+
+## [1.66.1] - 2026-02-23
+### Added - ChargeBearer body parameter on payouts
+
+https://github.com/Mangopay/mangopay2-nodejs-sdk/pull/535/changes/ca0d85f6d6f35aa9ebe1ee5e77aa1e8a7b342b20
+On [POST Create a Payout](/api-reference/payouts/create-payout), platforms can now request to pay all SWIFT fees using the `OUR` value of the new `ChargeBearer` property ([API release note](/release-notes/api/2026-02-16)):
+- Handle `ChargeBearer` param
+
+### Added - AuthenticationType response property on card pay-ins
+
+https://github.com/Mangopay/mangopay2-nodejs-sdk/pull/535/changes/ac2813ac69d495ede90328d859e5749feb1a266b
+- The `AuthenticationResult.AuthenticationType` response property is now returned on card pay-ins
+
+### Added - TelephoneOrder body parameter on recurring card pay-ins (CIT and MIT)
+
+https://github.com/Mangopay/mangopay2-nodejs-sdk/pull/535/changes/32178e20810720a44c20a75556cdd961e1505cd3
+To support the `TelephoneOrder` property on [POST Create a Recurring PayIn (MIT)](/api-reference/recurring-card-payins/create-recurring-payin-cit) and [POST Create a Recurring PayIn (CIT)](/api-reference/recurring-card-payins/create-recurring-payin-mit):
+- handle `PaymentCategory` param
+
+## [1.66.0] - 2026-02-12
+### FX
+
+#### Breaking change – Custom fees
+#530
+To support percentage-based FX fees ([API release note](/release-notes/api/2026-02-11)):
+- **Breaking change** – The `CreateInstantConversion.Fees` type is now `CustomMoneyData` instead of `MoneyData`, to support the new FX fees structure of `Type` (`PERCENTAGE` | `FIXED`) and `Value`
+- **Breaking change** - The `CreateInstantConversion.CreditedFunds` type is now `MoneyDataOptionalAmount` instead of `MoneyData`
+- Added `Fees` to `CreateQuote`
+- Added `Fees` and `RequestedFees` to `QuoteData`
+- Added `RequestedFees` to `ConversionData`
+
+#### Added – User margin
+#530
+To support the FX user margin ([API release note](/release-notes/api/2026-02-11)):
+- Added `UserMargin` to `CreateInstantConversion` and `CreateQuote`
+- Added `MarginsResponse` to `ConversionData` and `QuoteData`
+
+### Echo
+
+#### Breaking change - Settlement upload endpoints
+#527
+To support the new behavior of the [POST Create a Settlement](/api-reference/settlements/create-settlement) endpoint to obtain an `UploadUrl`:
+- Updated `settlement_sample.csv` and tests
+- Added `FileName` and `UploadUrl` to `SettlementData`
+- Added `GenerateSettlementUploadUrl ` interface
+- **Breaking change** – Replaced `upload` method in `Settlements` with `generateUploadUrl`:
+- **Breaking change** – Replaced `update` method in `Settlements` with `generateNewUploadUrl`:
+
+#### Added - GET validations for a Settlement endpoint
+#527
+To support the [GET View validations for a Settlement](/api-reference/settlements/view-settlement-validations) endpoint:
+- Added `SettlementValidation`, `SettlementValidationFooter`, `SettlementValidationLine` interfaces
+- Added `getValidations` method to `Settlements`
+
+#### Added - PUT Cancel a Settlement endpoint
+#527
+To support the [PUT Cancel a Settlement](/api-reference/settlements/cancel-settlement) endpoint:
+- Added `cancel` method to `Settlements`
+
+#### Added – Intent unfunded amounts and source wallet
+#528
+- Added `SplitOriginWalletId` to `PayInIntentLineItem`, `PayInIntentSplitData`, `CreatePayInIntentSplit`
+  #523
+- Added `UnfundedSellerAmount` to `PayInIntentLineItem`
+- Added `UnfundedAmount` to `PayInIntentData`, `CreatePayInIntentAuthorization`
+
+#### Added – POST Create a Refund of an Intent
+#524
+To support [POST Create a Refund of an Intent](/api-reference/intents/create-intent-refund):
+- Added `Refund` and `Capture` to `PayInIntentData`
+- Added `createPayInIntentRefund` method to `Payins`:
+
+#### Added – POST Reverse the Refund of an Intent
+#524
+To support [POST Reverse the Refund of an Intent](/api-reference/intents/create-intent-refund):
+- Added `reversePayInIntentRefund` method to `PayIns`:
+
+#### Added – POST Create a Dispute of an Intent
+#524
+To support [POST Create a Dispute of an Intent](/api-reference/intents/create-intent-refund):
+- Added `Dispute` to `PayInIntentData`
+- Added `createPayInIntentDispute` method to `PayIns`:
+
+#### Added - PUT Update an Intent Dispute
+#524
+To support [PUT Update an Intent Dispute](/api-reference/intents/create-intent-dispute):
+- Added `Decision` to `PayInIntentData`
+- Added `UpdatePayInIntentDisputeOutcome` interface
+- Added `updatePayInIntentDisputeOutcome` method to `PayIns`:
+
+## [1.65.0] - 2026-01-27
+### Added
+- Support for new [GET View the SCA status of a User](https://docs.mangopay.com/api-reference/users/view-user-sca-status) endpoint ([API release note](https://docs.mangopay.com/release-notes/api/2026-01-15)) (#526)
+- Support for new [event types](https://docs.mangopay.com/webhooks/event-types#mangopay-sca-email-and-phone-number-verification) `SCA_CONTACT_INFORMATION_UPDATE_CONSENT_GIVEN`, `SCA_CONTACT_INFORMATION_UPDATE_CONSENT_REVOKED`, `SCA_TRANSFER_CONSENT_GIVEN`, `SCA_TRANSFER_CONSENT_REVOKED`, `SCA_RECIPIENT_REGISTRATION_CONSENT_GIVEN`, `SCA_RECIPIENT_REGISTRATION_CONSENT_REVOKED`, `SCA_VIEW_ACCOUNT_INFORMATION_CONSENT_GIVEN`, `SCA_VIEW_ACCOUNT_INFORMATION_CONSENT_REVOKED`, `SCA_EMAIL_VERIFIED`, `SCA_PHONE_NUMBER_VERIFIED` (#525)
+- Support for new `RecipientId` property on [payouts](https://docs.mangopay.com/api-reference/payouts/create-payout) ([API release note](https://docs.mangopay.com/release-notes/api/2026-01-27)) (#522)
+
+Release PR: #529
+
+## [1.64.0] - 2025-11-26
+### Changed
+- changed naming convention to mangopay4
+
+## [1.62.2] - 2025-11-25
+### Added
+- Support for `ScaContext` on [POST Create a Recipient](https://docs.mangopay.com/api-reference/recipients/create-recipient) for platforms taking action by [proxy with consent](https://docs.mangopay.com/guides/sca/proxy-management) from the user ([API release note](https://docs.mangopay.com/release-notes/api/2025-11-17), #519)
+
+## [1.62.1] - 2025-10-31
+### Fixed
+- Upgraded `form-data` library version - thanks for chasing @sipr-invivo
+- Upgraded `axios` library version
+
+## [1.62.0] - 2025-10-27
+### Added
+- New [POST Manage proxy consent for a User](https://docs.mangopay.com/api-reference/users/manage-proxy-consent) endpoint to obtain and manage user consent via the hosted SCA experience (if proxy is activated). A proxy and user consent are now required to use the `USER_NOT_PRESENT` value for `ScaContext` ([API release note](https://docs.mangopay.com/release-notes/api/2025-10-23), #515 )
+- `ScaContext` request parameter newly added on all user POST and PUT endpoints, enabling the platform to request these actions with `USER_NOT_PRESENT` – provided the proxy is in place, activated, and the user has given consent ([API release note](https://docs.mangopay.com/release-notes/api/2025-10-23#sca%3A-scacontext-request-parameter-on-user-endpoints), #514 )
+- Support for the `Licensor` property on [GET View a Client](https://docs.mangopay.com/api-reference/client/view-client) (#513 )
+
+### Changed
+- `x-tenant-id` deprecated as no longer necessary for UK platforms; the parameter is ignored by Mangopay (#513 )
+
+## [1.61.0] - 2025-10-01
+### Added
+- [Verification of Payee (VOP)](https://docs.mangopay.com/guides/vop/recipients-payouts) API response fields (`RecipientVerificationOfPayee` and sub-properties) on the endpoints [GET View a Recipient](https://docs.mangopay.com/api-reference/recipients/view-recipient), [POST Create a Recipient](https://docs.mangopay.com/api-reference/recipients/create-recipient), [POST Create a Payout](https://docs.mangopay.com/api-reference/payouts/create-payout) ([API release note](https://docs.mangopay.com/release-notes/api/2025-09-30), #500)
+- Support for the [POST Cancel an Intent](https://docs.mangopay.com/api-reference/intents/cancel-intent) endpoint for [Echo](https://docs.mangopay.com/guides/echo), Mangopay's solution for platforms working with another third-party PSP for funds acquisition (#511)
+- Support for [POST Submit data for a PayPal PayIn](https://docs.mangopay.com/api-reference/paypal/submit-data-paypal-payin) endpoint (#506)
+
+## [1.60.4] - 2025-09-26
+### Improved
+- Method for building the OAuth token URL, fixing a potential issue introduced in 1.42.1 #510
+
+## [1.60.3] - 2025-09-23
+### Added
+- Support for `ProfilingAttemptReference` on all payment methods for Mangopay's Fraud Prevention solution #505
+- Webhook event types for [Echo](https://docs.mangopay.com/guides/echo), Mangopay's solution for third-party PSP integrations: `INTENT_AUTHORIZED`,`INTENT_CAPTURED`,`INTENT_REFUNDED`,`INTENT_REFUND_REVERSED`,`INTENT_DISPUTE_CREATED`,`INTENT_DISPUTE_DEFENDED`,`INTENT_DISPUTE_WON`,`INTENT_DISPUTE_LOST`,`INTENT_SETTLED_NOT_PAID`,`INTENT_PAID`,`SPLIT_CREATED`,`SPLIT_PENDING_FUNDS_RECEPTION`,`SPLIT_AVAILABLE`,`SPLIT_REJECTED`,`SPLIT_REVERSED` #502
+- Support for `VirtualAccountPurpose` on Banking Alias object #508
+
+### Improved
+- Added missing `OptionsHelper` in TypeScript #503
+- Add new library for unit tests #504
+
 ## [1.60.2] - 2025-09-02
 ### Added
 - `XK` to country ISO values #499

@@ -18,15 +18,17 @@ describe('Events', function() {
             var payIn, events;
 
             before(function(done) {
-                helpers.getNewPayInCardWeb(api, john, function(data, response){
+                helpers.getNewPayInCardWeb(api, john, async function (data, response) {
                     payIn = data;
-                    api.Events.getAll(function(data, response){
+                    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+                    await delay(5000);
+                    api.Events.getAll(function (data, response) {
                         events = data;
                         done();
                     }, {
                         parameters: {
-                            BeforeDate: payIn.CreationDate+10,
-                            AfterDate: payIn.CreationDate-10,
+                            BeforeDate: payIn.CreationDate + 10,
+                            AfterDate: payIn.CreationDate - 10,
                             EventType: 'PAYIN_NORMAL_CREATED'
                         }
                     })
@@ -43,15 +45,17 @@ describe('Events', function() {
             var payIn, events;
 
             before(function(done) {
-                helpers.getNewPayInCardDirect(api, john, function(data, response){
+                helpers.getNewPayInCardDirect(api, john, async function (data, response) {
                     payIn = data;
-                    api.Events.getAll(function(data, response){
+                    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+                    await delay(10000);
+                    api.Events.getAll(function (data, response) {
                         events = data;
                         done();
                     }, {
                         parameters: {
-                            BeforeDate: payIn.ExecutionDate+100,
-                            AfterDate: payIn.CreationDate-100,
+                            BeforeDate: payIn.ExecutionDate + 100,
+                            AfterDate: payIn.CreationDate - 100,
                             EventType: 'PAYIN_NORMAL_SUCCEEDED'
                         }
                     });
@@ -72,7 +76,7 @@ describe('Events', function() {
                     payOut = data;
                     // wait 2 seconds for the transactions to be created by the API
                     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-                    await delay(2000);
+                    await delay(5000);
 
                     api.Events.getAll(function (data, response) {
                         events = data;
@@ -83,7 +87,7 @@ describe('Events', function() {
                             AfterDate: payOut.CreationDate - 10,
                             EventType: 'PAYOUT_NORMAL_CREATED'
                         }
-                    })
+                    });
                 });
             });
 

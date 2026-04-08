@@ -46,5 +46,40 @@ export namespace settlement {
          * The difference between ActualSettlementAmount and the amount received on the escrow wallet
          */
         FundsMissingAmount: number;
+
+        /**
+         * The FileName submitted to the POST Create a Settlement and generate upload URL endpoint,
+         * with a timestamp of the Settlement creation date automatically appended by Mangopay.
+         */
+        FileName: string;
+
+        /**
+         * The unique temporary pre-signed URL to which to upload your CSV file.
+         * Use the full dynamic URL including the host, path, and all query parameters.
+         * The URL is already authenticated, so the call does not require an Authorization header.
+         */
+        UploadUrl: string;
+    }
+
+    interface GenerateSettlementUploadUrl {
+        FileName: string;
+    }
+
+    interface SettlementValidationLine {
+        ExternalProviderReference?: string,
+        ExternalTransactionType?: string,
+        Code?: string,
+        Description?: string,
+    }
+
+    interface SettlementValidationFooter {
+        FooterName?: string,
+        Code?: string,
+        Description?: string,
+    }
+
+    interface SettlementValidation {
+        FooterErrors?: SettlementValidationFooter[],
+        LinesErrors?: SettlementValidationLine[],
     }
 }

@@ -6,6 +6,8 @@ import { payIn } from "./payIn";
 import { SecureMode } from "../types";
 
 export namespace cardValidation {
+    import AuthenticationResult = payIn.AuthenticationResult;
+
     interface CardValidationData extends entityBase.EntityBaseData {
         /**
          * The unique identifier of the user at the source of the transaction.
@@ -80,6 +82,11 @@ export namespace cardValidation {
          * TelephoneOrder – Payment received via mail order or telephone order (MOTO).
          */
         PaymentCategory: string;
+
+        /**
+         * Authentication result
+         */
+        AuthenticationResult?: AuthenticationResult;
     }
 
     interface CreateCardValidation {

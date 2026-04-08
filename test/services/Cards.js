@@ -19,8 +19,10 @@ describe('Cards', function () {
         var getPreAuthorizations;
 
         before(function (done) {
-            helpers.getNewPayInCardDirect(api, john, function (data) {
+            helpers.getNewPayInCardDirect(api, john, async function (data) {
                 cardId = data.CardId;
+                const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+                await delay(5000);
                 api.Cards.getPreAuthorizations(cardId, function (data, response) {
                     getPreAuthorizations = data;
                     done();
